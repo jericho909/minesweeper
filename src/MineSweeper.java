@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class MineSweeper {
 
@@ -8,14 +6,14 @@ public class MineSweeper {
     static String[][] createBoard(int row, int col) {
         String[][] gameBoard = new String[row][col];
         for (String[] strings : gameBoard) {
-            Arrays.fill(strings, "-");
+            Arrays.fill(strings, "  -  ");
         }
         return gameBoard;
     }
 
     //oyuncudan gelen hamle sonrası oyun alanı değiştirmek için method, bu method oyun alanını gösterecek methodu da içinde çağırıyor
     static void changeBoard (int row, int col, String[][] arr){
-        arr[row][col] = " * ";
+        arr[row][col] = "  *  ";
         showBoard(arr);
     }
 
@@ -80,6 +78,37 @@ public class MineSweeper {
          return list;
      }
 
+    static String[][] deepCopy(String[][] original) {
+        if (original == null) return null;
+
+        String[][] copy = new String[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            copy[i] = Arrays.copyOf(original[i], original[i].length);
+        }
+        return copy;
+    }
+
+
+    static String[][] generateMines(String[][] arr){
+        int x = arr.length;
+        int y = arr[0].length;
+
+        int numberofMines = (x * y) / 4;
+        String[][] arrayWithMines = deepCopy(arr);
+        Random rand = new Random();
+
+        for (int i = 0; i < numberofMines; i++){
+            int randomRow = rand.nextInt(x);
+            int randomCol = rand.nextInt(y);
+            arrayWithMines[randomRow][randomCol] = "  *  ";
+        }
+
+        return arrayWithMines;
+     }
+
+     static boolean checkIfMine(int a, int b, String[][] arr){
+         return Objects.equals(arr[a][b], "  *  ");
+     }
 
 }
 

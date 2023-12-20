@@ -11,11 +11,6 @@ public class MineSweeper {
         return gameBoard;
     }
 
-    //oyuncudan gelen hamle sonrası oyun alanı değiştirmek için method, bu method oyun alanını gösterecek methodu da içinde çağırıyor
-    static void changeBoard (int row, int col, String[][] arr){
-        arr[row][col] = "  *  ";
-        showBoard(arr);
-    }
 
     //oyun alanını gösterecek method
     static void showBoard(String[][] arr){
@@ -48,36 +43,38 @@ public class MineSweeper {
     }
      //kullanıcının hamle yapmasını sağlayan method ,return sadece tek veri döndürdüğü için seçimler arraylistte toplanıp
      //listeden extract ediliyor
-     static ArrayList<Integer> playerMove(String[][] arr){
+     static ArrayList<Integer> playerMove(String[][] arr) {
          ArrayList<Integer> list = new ArrayList<>();
          Scanner input = new Scanner(System.in);
          System.out.println("Lütfen hamleniz için koordinat seçiniz: ");
          int row, col;
-         while (true){
+
+         boolean validMove = false;
+
+         while (!validMove) {
              System.out.println("Satır giriniz: ");
              row = input.nextInt();
-             if (row < arr.length + 1 && row >= 0) {
-                 list.add(row);
-                 break;
-             } else {
-                 System.out.println("Seçtiğiniz satır koordinatlar içerisinde değil. Lütfen tekrar deneyiniz.");
-             }
-         }
-
-         while (true){
              System.out.println("Sütun giriniz: ");
              col = input.nextInt();
-             if (col < arr[0].length + 1 && col >= 0) {
-                 list.add(col);
-                 break;
+
+             if (row < arr.length + 1 && row >= 0 && col < arr[0].length + 1 && col >= 0) {
+                 if (!Objects.equals(arr[row - 1][col - 1], "  -  ")) {
+                     System.out.println("Bu koordinat zaten seçilmiş. Lütfen farklı bir koordinat seçiniz.");
+                 } else {
+                     list.add(row);
+                     list.add(col);
+                     validMove = true;
+                 }
              } else {
-                 System.out.println("Seçtiğiniz sütun koordinatlar içerisinde değil. Lütfen tekrar deneyiniz.");
+                 System.out.println("Geçersiz koordinatlar. Lütfen tekrar deneyiniz.");
              }
          }
 
          return list;
      }
 
+    //copy() methodu shallow copy oluşturduğu için orijinal dizi de değişyordu.
+    //deepcopy() hem array'in boyutu hem de elemenlarını kopyalarak bunun önüne geçiyor
     static String[][] deepCopy(String[][] original) {
         if (original == null) return null;
 
@@ -87,8 +84,9 @@ public class MineSweeper {
         }
         return copy;
     }
-
-
+//    Random class'ı ile bomba sayımız kadar for döngüsü devam ediyor, her döngüde üst limit satır ya da sütun uzunluğu
+//     olarak rastgele numara oluşturulup o koordinata bomba yerleştiriliyor. bu dizi yeni deepcopy() ile orijinal diziyle
+//     aynı büyüklükte bir dizide saklanıyor
     static String[][] generateMines(String[][] arr){
         int x = arr.length;
         int y = arr[0].length;
@@ -106,9 +104,47 @@ public class MineSweeper {
         return arrayWithMines;
      }
 
+     //seçilen koordinatta bomba var mı diye kontrol ediyoruz
      static boolean checkIfMine(int a, int b, String[][] arr){
          return Objects.equals(arr[a][b], "  *  ");
      }
+
+    static void checkNeighbours(int a, int b, String[][] arrBoard, String[][] arrBoardWithMines) {
+        int numberOfMines = 0;
+        int rows = arrBoard.length;
+        int cols = arrBoard[0].length;
+        // directions dizisi, mevcut hücrenin etrafındaki konumları belirtiyor
+        int[][] directions = {
+                {-1, -1}, {-1, 0}, {-1, 1},
+                {0, -1},           {0, 1},
+                {1, -1}, {1, 0}, {1, 1}
+        };
+
+        for (int[] dir : directions) {
+            //hücrenin etrafındaki bütün koordinatları geziyoruz
+            int newRow = a + dir[0];
+            int newCol = b + dir[1];
+
+            //şartları kontrol ediyoruz. örneğin sol üst köşedeki nokta için üsütne veya soluna doğru gidilmesi hata
+            // vereceği için onları değerlendirmeye almıyoruz
+            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+
+                if (Objects.equals(arrBoardWithMines[newRow][newCol], "  *  ")) {
+                    numberOfMines++;
+                }
+            }
+        }
+
+
+        if (!Objects.equals(arrBoardWithMines[a][b], "  *  ")) {
+            arrBoard[a][b] = "  " + numberOfMines + "  ";
+        }
+        //oynama alanını yeniliyoruz
+        showBoard(arrBoard);
+    }
+
+
+
 
 }
 

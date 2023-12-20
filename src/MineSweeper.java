@@ -1,8 +1,9 @@
 import java.util.*;
-
+//değerlendirme formu 5
 public class MineSweeper {
 
-    //oyun alanı oluşturmak için method
+    //method to create the gameboard
+    //değerlendirme formu 6
     static String[][] createBoard(int row, int col) {
         String[][] gameBoard = new String[row][col];
         for (String[] strings : gameBoard) {
@@ -12,7 +13,7 @@ public class MineSweeper {
     }
 
 
-    //oyun alanını gösterecek method
+    //method for displaying the gameboard
     static void showBoard(String[][] arr){
         for (String[] x : arr)
         {
@@ -25,8 +26,10 @@ public class MineSweeper {
         System.out.println("===========================");
     }
 
-    //oyun başladığı zaman kullanıcıdan oyun alanı için giriş isteyen method, return sadece tek veri döndürdüğü için seçimleri arraylistte toplanıp
-    //listeden extract ediliyor
+
+    //When the game starts, the method prompts the user for input regarding the game area. In Java, since the return
+    //statement can only yield a single value, the choices are gathered within an ArrayList and then extracted from the list.
+    //değerlendirme formu 7
     static ArrayList<Integer> welcomePlayer(){
         System.out.println("Mayın tarlası oyununa hoş geldiniz.");
         ArrayList<Integer> list = new ArrayList<>();
@@ -41,8 +44,9 @@ public class MineSweeper {
 
         return list;
     }
-     //kullanıcının hamle yapmasını sağlayan method ,return sadece tek veri döndürdüğü için seçimler arraylistte toplanıp
-     //listeden extract ediliyor
+    //The method to prompt the user for selecting the grid on the gameboard. In Java, since the return
+    //statement can only yield a single value, the choices are gathered within an ArrayList and then extracted from the list.
+     //değerlendirme formu 9
      static ArrayList<Integer> playerMove(String[][] arr) {
          ArrayList<Integer> list = new ArrayList<>();
          Scanner input = new Scanner(System.in);
@@ -66,6 +70,7 @@ public class MineSweeper {
                      validMove = true;
                  }
              } else {
+                 //değerlendirme formu 10
                  System.out.println("Geçersiz koordinatlar. Lütfen tekrar deneyiniz.");
              }
          }
@@ -73,8 +78,8 @@ public class MineSweeper {
          return list;
      }
 
-    //copy() methodu shallow copy oluşturduğu için orijinal dizi de değişyordu.
-    //deepcopy() hem array'in boyutu hem de elemenlarını kopyalarak bunun önüne geçiyor
+    // Because the copy() method creates a shallow copy, the original array was also being altered.
+    // The deepcopy() method prevents this by copying both the size and elements of the array.
     static String[][] deepCopy(String[][] original) {
         if (original == null) return null;
 
@@ -84,9 +89,11 @@ public class MineSweeper {
         }
         return copy;
     }
-//    Random class'ı ile bomba sayımız kadar for döngüsü devam ediyor, her döngüde üst limit satır ya da sütun uzunluğu
-//     olarak rastgele numara oluşturulup o koordinata bomba yerleştiriliyor. bu dizi yeni deepcopy() ile orijinal diziyle
-//     aynı büyüklükte bir dizide saklanıyor
+
+    // With the Random class, a for loop continues until it reaches the number of bombs we have. In each iteration, a random number
+    // within the upper limit of the row or column length is generated, and a bomb is placed at that coordinate. This
+    // array is stored in a new array of the same size as the original using the deepcopy() method.
+    //değerlendirme formu 8
     static String[][] generateMines(String[][] arr){
         int x = arr.length;
         int y = arr[0].length;
@@ -104,7 +111,8 @@ public class MineSweeper {
         return arrayWithMines;
      }
 
-     //seçilen koordinatta bomba var mı diye kontrol ediyoruz
+    // We are checking if there is a bomb at the selected coordinate.
+    //değerlendirme formu 13
      static boolean checkIfMine(int a, int b, String[][] arr){
          return Objects.equals(arr[a][b], "  *  ");
      }
@@ -113,7 +121,7 @@ public class MineSweeper {
         int numberOfMines = 0;
         int rows = arrBoard.length;
         int cols = arrBoard[0].length;
-        // directions dizisi, mevcut hücrenin etrafındaki konumları belirtiyor
+        // The 'directions' array specifies the positions around the current cell.
         int[][] directions = {
                 {-1, -1}, {-1, 0}, {-1, 1},
                 {0, -1},           {0, 1},
@@ -121,12 +129,13 @@ public class MineSweeper {
         };
 
         for (int[] dir : directions) {
-            //hücrenin etrafındaki bütün koordinatları geziyoruz
+            // We are iterating through all the coordinates around the cell.
             int newRow = a + dir[0];
             int newCol = b + dir[1];
 
-            //şartları kontrol ediyoruz. örneğin sol üst köşedeki nokta için üsütne veya soluna doğru gidilmesi hata
-            // vereceği için onları değerlendirmeye almıyoruz
+
+            // We are checking the conditions. For instance, for the point in the top-left corner, moving upwards or to the left
+            // would cause an error, so we are not considering those movements.
             if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
 
                 if (Objects.equals(arrBoardWithMines[newRow][newCol], "  *  ")) {
@@ -134,12 +143,13 @@ public class MineSweeper {
                 }
             }
         }
-
+        //değerlendirme formu 12
 
         if (!Objects.equals(arrBoardWithMines[a][b], "  *  ")) {
             arrBoard[a][b] = "  " + numberOfMines + "  ";
         }
-        //oynama alanını yeniliyoruz
+        //Updating the gameboard
+        //değerlendirme formu 11
         showBoard(arrBoard);
     }
 

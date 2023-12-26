@@ -39,7 +39,7 @@ public class Main {
         }
         //değerlendirme formu 14 - 15
         MineSweeper.checkNeighbours(playerMoveRow, playerMoveCol, gameBoard, gameBoardWithMines);
-        if (numberOfCells - numberOfPlayerMoves == numberOfMines + 1) {
+        if (numberOfCells - numberOfPlayerMoves == numberOfMines) {
             System.out.println("Kazandın! Tebrikler!");
             break;
         }

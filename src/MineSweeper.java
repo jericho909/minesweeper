@@ -31,16 +31,34 @@ public class MineSweeper {
     //statement can only yield a single value, the choices are gathered within an ArrayList and then extracted from the list.
     //değerlendirme formu 7
     static ArrayList<Integer> welcomePlayer(){
+        boolean isValidRow = false;
+        boolean isValidCol = false;
         System.out.println("Mayın tarlası oyununa hoş geldiniz.");
         ArrayList<Integer> list = new ArrayList<>();
         Scanner input = new Scanner(System.in);
         System.out.println("Lütfen oyun alanının boyutlarını giriniz.");
+
+        do {
         System.out.println("Satır sayısı: ");
         int row = input.nextInt();
-        list.add(row);
+        if (row >= 2){
+            list.add(row);
+            isValidRow = true;
+        } else {
+            System.out.println("Satır sayısı 2'den küçük olamaz.");
+        }
+        } while (!isValidRow);
+
+        do {
         System.out.println("Sütun sayısı: ");
         int col = input.nextInt();
-        list.add(col);
+        if (col >= 2){
+            list.add(col);
+            isValidCol = true;
+        } else {
+            System.out.println("Sütun sayısı 2'den az olamaz.");
+        }
+        }while (!isValidCol);
 
         return list;
     }
@@ -61,7 +79,7 @@ public class MineSweeper {
              System.out.println("Sütun giriniz: ");
              col = input.nextInt();
 
-             if (row < arr.length + 1 && row >= 0 && col < arr[0].length + 1 && col >= 0) {
+             if (row < arr.length + 1 && row > 0 && col < arr[0].length + 1 && col > 0) {
                  if (!Objects.equals(arr[row - 1][col - 1], "  -  ")) {
                      System.out.println("Bu koordinat zaten seçilmiş. Lütfen farklı bir koordinat seçiniz.");
                  } else {
@@ -94,22 +112,28 @@ public class MineSweeper {
     // within the upper limit of the row or column length is generated, and a bomb is placed at that coordinate. This
     // array is stored in a new array of the same size as the original using the deepcopy() method.
     //değerlendirme formu 8
-    static String[][] generateMines(String[][] arr){
+    static String[][] generateMines(String[][] arr) {
         int x = arr.length;
         int y = arr[0].length;
 
-        int numberofMines = (x * y) / 4;
+        int numberOfMines = (x * y) / 4;
         String[][] arrayWithMines = deepCopy(arr);
         Random rand = new Random();
 
-        for (int i = 0; i < numberofMines; i++){
+        int minesPlaced = 0;
+        while (minesPlaced < numberOfMines) {
             int randomRow = rand.nextInt(x);
             int randomCol = rand.nextInt(y);
-            arrayWithMines[randomRow][randomCol] = "  *  ";
+
+            if (!arrayWithMines[randomRow][randomCol].equals("  *  ")) {
+                arrayWithMines[randomRow][randomCol] = "  *  ";
+                minesPlaced++;
+            }
         }
 
         return arrayWithMines;
-     }
+    }
+
 
     // We are checking if there is a bomb at the selected coordinate.
     //değerlendirme formu 13

@@ -85,24 +85,34 @@ public class MineSweeper {
 
         do {
         System.out.println("Satır sayısı: ");
-        int row = input.nextInt();
-        if (row >= 2){
-            list.add(row);
-            isValidRow = true;
+        if (input.hasNextInt()){
+            int row = input.nextInt();
+            if (row >= 2){
+                list.add(row);
+                isValidRow = true;
+            } else {
+                System.out.println("Satır sayısı 2'den küçük olamaz.");
+            }
         } else {
-            System.out.println("Satır sayısı 2'den küçük olamaz.");
+            System.out.println("Lütfen sayı girin.");
+            input.next();
         }
         } while (!isValidRow);
 
         do {
         System.out.println("Sütun sayısı: ");
-        int col = input.nextInt();
-        if (col >= 2){
-            list.add(col);
-            isValidCol = true;
-        } else {
-            System.out.println("Sütun sayısı 2'den az olamaz.");
-        }
+            if (input.hasNextInt()){
+                int col = input.nextInt();
+                if (col >= 2){
+                    list.add(col);
+                    isValidCol = true;
+                } else {
+                    System.out.println("Satır sayısı 2'den küçük olamaz.");
+                }
+            } else {
+                System.out.println("Lütfen sayı girin.");
+                input.next();
+            }
         }while (!isValidCol);
 
         return list;

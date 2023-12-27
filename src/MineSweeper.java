@@ -2,6 +2,51 @@ import java.util.*;
 //değerlendirme formu 5
 public class MineSweeper {
 
+
+    // değerlendirme formu 14 - 15
+    public static void run() {
+        ArrayList<Integer> playerChoice = welcomePlayer();
+        // In Java, a method can only return a single value. Therefore, the user's preferences are collected in an ArrayList
+        // and extracted from there. As there are only two options, getFirst() and getLast() always extract the data in the same order: row and column.
+        int row = playerChoice.get(0);
+        int col = playerChoice.get(1);
+        int numberOfCells = col * row;
+        int numberOfMines = (col * row) / 4;
+        int numberOfPlayerMoves = 0;
+
+        // The game board is created and displayed to the user.
+        String[][] gameBoard = createBoard(row, col);
+        String[][] gameBoardWithMines = generateMines(gameBoard);
+        showBoard(gameBoard);
+
+        boolean foundMine = false;
+
+        // Start of the game loop
+        do {
+            //I used an ArrayList for the reasons mentioned above
+
+            ArrayList<Integer> playerMoveChoice = playerMove(gameBoard);
+            int playerMoveRow = playerMoveChoice.get(0) - 1; // We decrement by 1 because the user provides coordinates as seen in the matrix, not as indices.
+            int playerMoveCol = playerMoveChoice.get(1) - 1;
+            numberOfPlayerMoves++;
+
+            //If the user uncovers a mine with their move, we exit the game loop and display the game over message.
+            if (checkIfMine(playerMoveRow, playerMoveCol, gameBoardWithMines)) {
+                System.out.println("Mayına bastın! Oyunu kaybettin :/");
+                showBoard(gameBoardWithMines);
+                foundMine = true;
+                break;
+            }
+
+            //değerlendirme formu 14 - 15
+            checkNeighbours(playerMoveRow, playerMoveCol, gameBoard, gameBoardWithMines);
+            if (numberOfCells - numberOfPlayerMoves == numberOfMines) {
+                System.out.println("Kazandın! Tebrikler!");
+                break;
+            }
+        } while (!foundMine);
+    }
+
     //method to create the gameboard
     //değerlendirme formu 6
     static String[][] createBoard(int row, int col) {
@@ -176,9 +221,6 @@ public class MineSweeper {
         //değerlendirme formu 11
         showBoard(arrBoard);
     }
-
-
-
 
 }
 
